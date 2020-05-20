@@ -24,6 +24,7 @@ public class PowerOutages implements Comparable<PowerOutages>{
 		
 		LocalDateTime tempDateTime = LocalDateTime.from(outageStart);
 		this.outageDuration = tempDateTime.until(outageEnd, ChronoUnit.HOURS);
+		
 		this.year = outageStart.getYear();
 	}
 
@@ -94,7 +95,10 @@ public class PowerOutages implements Comparable<PowerOutages>{
 
 	@Override
 	public String toString() {
-		return "PowerOutages [id=" + id + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append(id);
+		return builder.toString();
+//		return "PowerOutages [id=" + id + "]";
 	}
 
 	@Override

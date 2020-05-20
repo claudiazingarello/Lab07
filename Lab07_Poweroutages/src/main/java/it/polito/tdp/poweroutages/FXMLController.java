@@ -89,6 +89,8 @@ public class FXMLController {
         assert btnWorst != null : "fx:id=\"btnWorst\" was not injected: check your FXML file 'Scene.fxml'.";
         assert txtResult != null : "fx:id=\"txtResult\" was not injected: check your FXML file 'Scene.fxml'.";
 
+     // Utilizzare questo font per incolonnare correttamente i dati;
+        txtResult.setStyle("-fx-font-family: monospace");
     }
 
 	public void setModel(Model model) {

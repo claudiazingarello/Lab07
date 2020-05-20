@@ -28,15 +28,19 @@ public class Model {
 
 		nercIdMap = new NercIdMap();
 		nercList = podao.getNercList(nercIdMap);
+		
+		eventList = podao.getPowerOutageList(nercIdMap);
 	}
 
 	//funzione che si occupa della ricorsione
 	//ha come dati i parametri ricavati da controller
 	public List<PowerOutages> getWorstCase (int maxNumberOfYears, int maxHoursOfOutage, Nerc nerc){
-
+		
+		//fase di inizializzazione
 		solution = new ArrayList<>();
 		maxAffectedPeople = 0;
 
+		//crea una nuova lista di eventi filtrata
 		eventListFiltered = new ArrayList<>();
 
 		for(PowerOutages event : eventList) {
@@ -66,7 +70,7 @@ public class Model {
 			int y1 = partial.get(0).getYear();
 			int y2 = partial.get(partial.size()-1).getYear();
 
-			if((y2-y1+1) > maxNumberOfYears) {//+1 perchè parto da zero
+			if((y2 - y1 + 1) > maxNumberOfYears) {//+1 perchè parto da zero
 				return false;
 			}
 		}
@@ -90,7 +94,7 @@ public class Model {
 	}
 	
 	private void recursive(List<PowerOutages> partial, int maxNumberOfYears, int maxHoursOfOutage) {
-		//Una soluzione è migliore della precedente se tale soluzione contiene più persone colpite
+		//Aggiorna la soluzione migliore
 		if(sumAffectedPeople(partial) > maxAffectedPeople) {
 			maxAffectedPeople = sumAffectedPeople(partial);
 			solution = new ArrayList<PowerOutages>(partial);
@@ -98,13 +102,16 @@ public class Model {
 
 		//Ci fermiamo quando vagliamo tutte le possibili soluzioni
 		for(PowerOutages event : eventListFiltered) {
+			//La soluzione parziale non deve contenere lo stesso evento
 			if(!partial.contains(event)) {
+				
 				partial.add(event);
 
 				// ha senso ricorrere quando rispettiamo il massimo numero di anni e di ore
 				if(checkMaxHoursOfOutage(partial, maxHoursOfOutage) && checkMaxYears(partial, maxNumberOfYears)) {
 					recursive(partial, maxNumberOfYears, maxHoursOfOutage);
 				}
+				
 				partial.remove(event);
 			}
 		}
